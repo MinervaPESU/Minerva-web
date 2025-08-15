@@ -95,19 +95,10 @@ const CustomRightArrow = ({ onClick }) => (
     </button>
   </div>
 );
-//Deploying!!
-export async function getServerSideProps() {
-  const response = await fetch(
-    "http://minervapesu.vercel.app/api/trendingarticles",
-    { cache: "force-cache", next: { revalidate: 86400 } }
-  );
-  const data = await response.json();
-  return { props: { data } };
-}
-export default function HomeComponent({ data }) {
-  console.log(data);
+
+export default function HomeComponent() {
   const router = useRouter();
-  //const [data, setData] = useState([]); //This refers to the 6 news articles featured in the home page
+  const [data, setData] = useState([]); //This refers to the 6 news articles featured in the home page
   const [open, setOpen] = useState(false); // Loading circular progress bar(Backdrop)
   const isSmallScreen = useMediaQuery({ maxWidth: 429 });
   const [dark, setDark] = useState(false);
@@ -127,6 +118,18 @@ export default function HomeComponent({ data }) {
   function closeModal() {
     setOpenDialogue(false);
   }
+
+  useEffect(() => {
+    const getTrendingArticles = async () => {
+      const response = await fetch("/api/trendingarticles", {
+        cache: "force-cache",
+        next: { revalidate: 86400 },
+      });
+      setData(await response.json());
+    };
+
+    getTrendingArticles();
+  }, []);
 
   const responsive = {
     superLargeDesktop: {
@@ -248,32 +251,34 @@ export default function HomeComponent({ data }) {
             <div className="basis-3/6 pr-2 ">
               <UpdatedHeading># Trending</UpdatedHeading>
 
-              <div>
-                <UpdatedNewsCard
-                  i={2}
-                  imageURL={`${data[0].imageURL}`}
-                  headline={`${data[0].title}`}
-                  writerName={`${data[0].writerName}`}
-                  genre={`${data[0].genre}`}
-                  date={`${data[0].createdAt}`}
-                  desc={`${data[0].description}`}
-                  id={`${data[0]._id}`}
-                  newArticle={true}
-                  bigger={true}
-                />
-                <UpdatedNewsCard
-                  i={2}
-                  imageURL={`${data[1].imageURL}`}
-                  headline={`${data[1].title}`}
-                  writerName={`${data[1].writerName}`}
-                  genre={`${data[1].genre}`}
-                  date={`${data[1].createdAt}`}
-                  desc={`${data[1].description}`}
-                  id={`${data[1]._id}`}
-                  newArticle={true}
-                  bigger={true}
-                />
-              </div>
+              {data.length >= 1 && (
+                <div>
+                  <UpdatedNewsCard
+                    i={2}
+                    imageURL={`${data[0].imageURL}`}
+                    headline={`${data[0].title}`}
+                    writerName={`${data[0].writerName}`}
+                    genre={`${data[0].genre}`}
+                    date={`${data[0].createdAt}`}
+                    desc={`${data[0].description}`}
+                    id={`${data[0]._id}`}
+                    newArticle={true}
+                    bigger={true}
+                  />
+                  <UpdatedNewsCard
+                    i={2}
+                    imageURL={`${data[1].imageURL}`}
+                    headline={`${data[1].title}`}
+                    writerName={`${data[1].writerName}`}
+                    genre={`${data[1].genre}`}
+                    date={`${data[1].createdAt}`}
+                    desc={`${data[1].description}`}
+                    id={`${data[1]._id}`}
+                    newArticle={true}
+                    bigger={true}
+                  />
+                </div>
+              )}
             </div>
             <div className="basis-2/4 pl-3 pt-15 flex flex-col sm:flex sm:flex-col">
               <div className="flex justify-between items-center">

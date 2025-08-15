@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
-import localFont from "@next/font/local";
+import localFont from "next/font/local";
 const gilroy = localFont({
   src: [
     { path: "../public/fonts/Gilroy-Medium.ttf", weight: "500" },

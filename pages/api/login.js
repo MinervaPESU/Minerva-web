@@ -7,6 +7,11 @@ const validate = async (req, res) => {
   if (req.method == "POST") {
     console.log(process.env.SERVER_SECRET_SIGN);
     const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      res.json({ token: "" });
+      return;
+    }
+
     if (user.password == req.body.password) {
       const token = jwt.sign(
         { _id: user._id },
